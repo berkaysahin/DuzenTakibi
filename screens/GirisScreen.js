@@ -23,15 +23,15 @@ export default class LoginScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={{ textAlign: 'center' }}>
+                    <Text style={{ fontSize: 32 }}>Düzen Takibi</Text>
+                </View>
                 <View style={{ padding: 20 }}>
                     <TextInput
-                        placeholder="Kullanıcı Adı"
+                        placeholder="E-Mail"
                         style={styles.input}
                         onChangeText={email => this.setState({ email })}
                         value={this.state.email}
-                    // underlineColorAndroid="transparent"
-                    // onChangeText={this.handleChangeText}
-                    // onSubmitEditing={this.handleSubmitEditing}
                     />
                 </View>
                 <View style={{ paddingBottom: 20 }}>
@@ -40,6 +40,8 @@ export default class LoginScreen extends React.Component {
                         style={styles.input}
                         onChangeText={sifre => this.setState({ sifre })}
                         value={this.state.sifre}
+                        secureTextEntry
+                        autoCapitalize="none"
                     />
                 </View>
                 {this.state.errorMessage &&

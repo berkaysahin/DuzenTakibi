@@ -3,13 +3,13 @@ import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, use
 import firebase from 'firebase'
 import Colors from '../utils/Colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import {Ionicons} from '@expo/vector-icons'
 
 const windowWidth = Dimensions.get('window').width;
 
 export default class RegisterScreen extends React.Component {
     state = {
         email: "",
-        adSoyad: "",
         sifre: "",
         errorMessage: null,
     }
@@ -27,20 +27,16 @@ export default class RegisterScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                 <View style={{ textAlign: 'center' }}>
+                <TouchableOpacity style={ styles.GeriTusu } onPress={() => this.props.navigation.goBack()}>
+                    <Ionicons name="arrow-back-circle" size={32} color="#FFFFFF"></Ionicons>
+                </TouchableOpacity>
+
+                <View style={{ textAlign: 'center' }}>
                     <Text style={{ fontSize: 32 }}>Haydi başlayalım!</Text>
                 </View>
                 <View style={{ padding: 20 }}>
                     <TextInput
-                        placeholder="Ad Soyad"
-                        style={styles.input}
-                        onChangeText={adSoyad => this.setState({ adSoyad })}
-                        value={this.state.adSoyad}
-                    />
-                </View>
-                <View style={{ paddingBottom: 20 }}>
-                    <TextInput
-                        placeholder="Kullanıcı Adı"
+                        placeholder="E-Mail"
                         style={styles.input}
                         onChangeText={email => this.setState({ email })}
                         value={this.state.email}
@@ -52,6 +48,8 @@ export default class RegisterScreen extends React.Component {
                         style={styles.input}
                         onChangeText={sifre => this.setState({ sifre })}
                         value={this.state.sifre}
+                        secureTextEntry
+                        autoCapitalize="none"
                     />
                 </View>
                 {this.state.errorMessage &&
@@ -67,15 +65,15 @@ export default class RegisterScreen extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                    <View style={{ flex: 0.6, alignItems: 'flex-end' }}>
+                    <View style={{ flex: 0.7, alignItems: 'flex-end' }}>
                         <Text>
-                            Hesabınız yok mu?
+                            Zaten hesabınız var mı?
                     </Text>
                     </View>
-                    <View style={{ flex: 0.3, alignItems: 'flex-end' }}>
-                        <TouchableHighlight onPress={() => this.props.navigation.popToTop()}>
+                    <View style={{ flex: 0.20, alignItems: 'flex-end' }}>
+                        <TouchableHighlight onPress={() => this.props.navigation.navigate("Giris")}>
                             <Text style={{ marginLeft: 5, color: Colors.link }}>
-                                Hemen oluşturun
+                                Giriş yapın
                         </Text>
                         </TouchableHighlight>
                     </View>
@@ -111,4 +109,14 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingLeft: 20,
     },
+    GeriTusu:{
+        position:"absolute",
+        top:34,
+        left: 20,
+        width:32,
+        height:32,
+        borderRadius:16,
+        alignItems:"center",
+        justifyContent:"center",
+    }
 });
