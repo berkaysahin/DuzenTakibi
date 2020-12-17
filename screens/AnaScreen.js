@@ -34,6 +34,8 @@ export default class HomeScreen extends React.Component {
                 <TouchableOpacity style={{ marginTop:32 }} onPress={this.signOut}>
                     <Text>Çıkış</Text>
                 </TouchableOpacity> */}
+                <Button title="asdsad"
+                onPress={() => this.props.navigation.openDrawer()} />
 
                 <Text style={styles.Baslik}>Düzen Takibi</Text>
                 <View style={{flexDirection: "row"}}>
