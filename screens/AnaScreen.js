@@ -1,9 +1,10 @@
-import React from 'react'
-import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, useWindowDimensions, Dimensions, LayoutAnimation, FlatList } from 'react-native';
+import React, { useState, useEffect, Component } from 'react';
+import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, useWindowDimensions, Dimensions, LayoutAnimation, FlatList, SafeAreaView } from 'react-native';
 import firebase from 'firebase'
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../utils/Colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+// import FirebaseKmt from '../FirebaseKmt'
 
 export default class HomeScreen extends React.Component {
     state = {
@@ -12,28 +13,68 @@ export default class HomeScreen extends React.Component {
         user: {},
         listeler: [],
         loading: true,
-        // let ref = firebase.firestore().collection("Kullanicilar").doc(this.state.uid).collection("listeler");
     };
+
+    // useEffect(()=>{
+        
+    // }, []);
+
 
     componentDidMount(){
         const { email, displayName, uid } = firebase.auth().currentUser;
         this.setState({ email, displayName, uid });
+        // fb = new FirebaseKmt(user => {
+
+        // });
+
+        // this.listeleriGetir(listeler => {
+        //     this.state({listeler, user}, () =>{
+        //         this.state({loading:false});
+        //     });
+        // });
+        // this.setState({user});
+
+        //this.listeleriGetir();
+
+        // FirebaseKmt.listeyiGetir(listeler => {
+        //         this.setState({listeler}, () => {
+        //             this.setState({loading:false});
+        //         });
+        //     });
+        //     console.log(this.state.listeler);
+    }
+
+    listeleriGetir(){
+        firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler").onSnapshot(snap => {
+            console.log("Total: ", snap.size); 
+            snap.forEach(doc => {
+                console.log(doc.id, doc.data());
+                this.setState(state => {
+                    state.listeler.push({id: doc.id, ...doc.data()});
+                });
+            });
+        });
+        // console.log("Girdi");
+        // const tmp = [];
+        // this.setState(state => {
+        //     state.listeler.push(this.tmp);
+        // });
+        // console.log(this.state.listeler);
+        // console.log("Cikti");
     }
 
     signOut = () => {
         firebase.auth().signOut();
     };
 
-    
-
     render() {
         LayoutAnimation.easeInEaseOut();
         return (
-            <View style={styles.container}>
-                {/* <Text>Hoş geldin {this.state.email}!</Text>
+            <SafeAreaView style={styles.container}>
+                <Text>Hoş geldin {this.state.email}!</Text>
                 <TouchableOpacity style={{ marginTop:32 }} onPress={this.signOut}>
                     <Text>Çıkış</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 <Button title="asdsad"
                 onPress={() => this.props.navigation.openDrawer()} />
 
@@ -52,16 +93,18 @@ export default class HomeScreen extends React.Component {
                     <Text>
                         Kullanıcı: {this.state.uid}
                     </Text>
+                    <TextInput defaultValue={this.state.uid}></TextInput>
                 </View>
+                <Button title="Çıkış" onPress={this.signOut} />
 
                 <View style={{height: 275, paddingLeft: 32}}>
-                    {/* <FlatList
-                    data = {tempData}
-                    keyExtractor= {item => item.name}
+                    <FlatList
+                    data = {this.state.listeler}
+                    keyExtractor= {item => item.id.toString()}
                     renderItem={({item}) => (<View><Text>{item.name}</Text></View>)}
-                    /> */}
+                    />
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }
