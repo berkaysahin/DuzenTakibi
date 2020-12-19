@@ -1,10 +1,13 @@
 import React, { useState, useEffect, Component } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, useWindowDimensions, Dimensions, LayoutAnimation, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, useWindowDimensions, ScrollView, Dimensions, LayoutAnimation, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import firebase from 'firebase'
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../utils/Colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-// import FirebaseKmt from '../FirebaseKmt'
+import FirebaseKmt from '../FirebaseKmt';
+import Is from '../components/Is';
+
+const windowWidth = Dimensions.get('window').width;
 
 export default class HomeScreen extends React.Component {
     state = {
@@ -15,95 +18,78 @@ export default class HomeScreen extends React.Component {
         loading: true,
     };
 
-    // useEffect(()=>{
-        
-    // }, []);
-
 
     componentDidMount(){
         const { email, displayName, uid } = firebase.auth().currentUser;
         this.setState({ email, displayName, uid });
-        // fb = new FirebaseKmt(user => {
-
-        // });
-
-        // this.listeleriGetir(listeler => {
-        //     this.state({listeler, user}, () =>{
-        //         this.state({loading:false});
-        //     });
-        // });
-        // this.setState({user});
-
-        //this.listeleriGetir();
-
-        // FirebaseKmt.listeyiGetir(listeler => {
-        //         this.setState({listeler}, () => {
-        //             this.setState({loading:false});
-        //         });
-        //     });
-        //     console.log(this.state.listeler);
-    }
-
-    listeleriGetir(){
-        firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler").onSnapshot(snap => {
-            console.log("Total: ", snap.size); 
-            snap.forEach(doc => {
-                console.log(doc.id, doc.data());
-                this.setState(state => {
-                    state.listeler.push({id: doc.id, ...doc.data()});
+        
+        fb = new FirebaseKmt((error, user) => {
+            if (error) {
+                return alert("Hata!");
+            }
+            
+            fb.listeyiGetir(listeler => {
+                this.setState({ listeler, user }, () => {
+                    this.setState({ loading: false });
                 });
             });
+
+            this.setState({ user });
         });
-        // console.log("Girdi");
-        // const tmp = [];
-        // this.setState(state => {
-        //     state.listeler.push(this.tmp);
-        // });
-        // console.log(this.state.listeler);
-        // console.log("Cikti");
     }
 
     signOut = () => {
         firebase.auth().signOut();
     };
 
+    listeyiYenile = list => {
+        firebase.listeyiYenile(list);
+    };
+
     render() {
+        if(this.state.loading){
+            return(
+                <View style={styles.container}>
+                    <ActivityIndicator size="large"></ActivityIndicator>
+                </View>
+            );
+        }
+
         LayoutAnimation.easeInEaseOut();
         return (
             <SafeAreaView style={styles.container}>
+                <View style={{margin:10}}></View>
                 <Text>Hoş geldin {this.state.email}!</Text>
-                <TouchableOpacity style={{ marginTop:32 }} onPress={this.signOut}>
-                    <Text>Çıkış</Text>
-                </TouchableOpacity>
-                <Button title="asdsad"
-                onPress={() => this.props.navigation.openDrawer()} />
+
+                <View style={{margin:10, alignItems: "center", justifyContent:'center', flexDirection:'row'}}>
+                    <Button title="Çıkış" onPress={() => this.signOut} />
+                    <View style={{marginRight:10}}></View>
+                    <Button title="Drawer Menü" onPress={() => this.props.navigation.openDrawer()} />
+                </View>
+                
+                <View style={{margin:10}}></View>
+                
 
                 <Text style={styles.Baslik}>Düzen Takibi</Text>
                 <View style={{flexDirection: "row"}}>
                     <View style={styles.divider} />
                 </View>
-                <View style={{marginVertical: 48}}>
+                <View style={{marginVertical: 20}}>
                     <TouchableOpacity style={styles.listeyeEkle}>
                         <AntDesign name="plus" size={16} color={Colors.white}/>
                     </TouchableOpacity>
                     <Text style={styles.listeyeEkleTxt}> Listeye Ekle</Text>
                 </View>
-
-                <View>
-                    <Text>
-                        Kullanıcı: {this.state.uid}
-                    </Text>
-                    <TextInput defaultValue={this.state.uid}></TextInput>
-                </View>
-                <Button title="Çıkış" onPress={this.signOut} />
-
-                <View style={{height: 275, paddingLeft: 32}}>
-                    <FlatList
+                <ScrollView>
+                <FlatList
                     data = {this.state.listeler}
                     keyExtractor= {item => item.id.toString()}
-                    renderItem={({item}) => (<View><Text>{item.name}</Text></View>)}
+                    renderItem={({item}) => (<Is list={item} />)}
+                    keyboardShouldPersistTaps="always"
+                    horizontal={false}
+                    showsHorizontalScrollIndicator={true}
                     />
-                </View>
+                </ScrollView>
             </SafeAreaView>
         );
     }

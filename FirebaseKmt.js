@@ -1,17 +1,36 @@
 import firebase from 'firebase'
-import '@firebase/firestore';
 
 class FirebaseKmt{
-    listeyiGetir(callback){
-        let ref = firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler");
+    constructor(param) {
+        this.init(param);
+    }
 
-        this.unsubscribe = ref.onSnapshot(snap => {
-            listeler = [];
-            snap.forEach(doc => {
-                listeler.push({id:doc.id, ...doc.data()});
-            });
-            callback(listeler);
+    init(param) {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                param(null, user);
+            } else {
+                param(error);
+            }
         });
+    }
+
+    listeyiGetir(param) {
+        let db = firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler");
+        
+        this.unsubscribe = db.onSnapshot(snapshot => {
+            lists = [];
+            snapshot.forEach(doc => {
+                lists.push({ id: doc.id, ...doc.data() });
+            });
+            param(lists);
+        });
+    }
+
+    listeyiYenile(liste) {
+        let db = this.db;
+
+        db.doc(liste.id).update(liste);
     }
 }
 
