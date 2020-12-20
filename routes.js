@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, SafeAreaView, Text, StyleSheet, View, Button } from 'react-native';
+import { Dimensions, SafeAreaView, Text, StyleSheet, View, Button, Image, TouchableOpacity } from 'react-native';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -14,21 +14,61 @@ import AnaScreen from './screens/AnaScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import Colors from './utils/Colors.js';
 
+import {DrawerItems} from 'react-navigation-drawer'
+
+import firebase from 'firebase'
+
 const getTabBarIcon = icon => ({ tintColor }) => (
   <MaterialIcons name={icon} size={26} style={{ color: tintColor }} />
 );
 
-class DrawerMenusu extends React.Component{
-  render(){
-    return(
-      <SafeAreaView style={{flex: 1}}>
-        <View style={{height:150, alignItems:'center',justifyContent:'center'}}>
-          <Button title="Profil Sayfası" onPress={() => this.props.navigation.navigate('Profile')} />
+const DrawerMenusu = (props) => (
+  <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
+        <View style={{height:150, backgroundColor:'white'}}>
+          <Image source={require('./assets/logo.png')} style={{ width: 120, height: 120, borderRadius:40 }} />
         </View>
-      </SafeAreaView>
-    );
-  }
-};
+        <View style={{alignItems:'center'}}>
+          <Text>{firebase.auth().currentUser.email}</Text>
+          <View style={{ margin: 10 }}>
+          <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => this.props.navigation.navigate('Profile')}
+                    >
+                        <Text style={{ fontSize: 20 }}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                </View>
+          </View>
+          <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => firebase.auth().signOut()}
+                    >
+                        <Text style={{ fontSize: 20 }}>Çıkış Yap</Text>
+                    </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+);
+
+const styles = StyleSheet.create({
+  input: {
+      backgroundColor: Colors.white,
+      fontSize: 14,
+      height: 40,
+      width: 250,
+      borderRadius: 20,
+      paddingLeft: 20,
+  },
+  button: {
+      alignItems: 'center',
+      backgroundColor: Colors.button,
+      padding: 8,
+      width: Dimensions.get('window').width*3/5,
+      borderRadius: 20,
+      paddingLeft: 20,
+  },
+});
 
 const AppTabNavigator = createBottomTabNavigator(
   {

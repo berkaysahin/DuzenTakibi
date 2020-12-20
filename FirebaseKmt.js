@@ -17,7 +17,6 @@ class FirebaseKmt{
 
     listeyiGetir(param) {
         let db = firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler");
-        
         this.unsubscribe = db.onSnapshot(snapshot => {
             lists = [];
             snapshot.forEach(doc => {
@@ -29,7 +28,6 @@ class FirebaseKmt{
 
     listeyiYenile(liste) {
         let db = this.db;
-
         db.doc(liste.id).update(liste);
     }
 }

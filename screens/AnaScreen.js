@@ -6,6 +6,7 @@ import Colors from '../utils/Colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import FirebaseKmt from '../FirebaseKmt';
 import Is from '../components/Is';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -20,6 +21,7 @@ export default class HomeScreen extends React.Component {
 
 
     componentDidMount(){
+        console.ignoredYellowBox = ['Setting a timer'];
         const { email, displayName, uid } = firebase.auth().currentUser;
         this.setState({ email, displayName, uid });
         
@@ -59,37 +61,31 @@ export default class HomeScreen extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={{margin:10}}></View>
-                <Text>Hoş geldin {this.state.email}!</Text>
 
-                <View style={{margin:10, alignItems: "center", justifyContent:'center', flexDirection:'row'}}>
-                    <Button title="Çıkış" onPress={() => this.signOut} />
-                    <View style={{marginRight:10}}></View>
-                    <Button title="Drawer Menü" onPress={() => this.props.navigation.openDrawer()} />
-                </View>
-                
-                <View style={{margin:10}}></View>
-                
+                <MaterialIcons name="menu" size={32} color={Colors.white} style={{left: 20, top:20}} onPress={() => this.props.navigation.openDrawer()} />
 
-                <Text style={styles.Baslik}>Düzen Takibi</Text>
-                <View style={{flexDirection: "row"}}>
-                    <View style={styles.divider} />
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                    <Text style={styles.Baslik}>Düzen Takibi</Text>
+                    <View style={{flexDirection: "row"}}>
+                        <View style={styles.divider} />
+                    </View>
+                    <View style={{marginVertical: 20}}>
+                        <TouchableOpacity style={styles.listeyeEkle}>
+                            <AntDesign name="plus" size={16} color={Colors.white}/>
+                        </TouchableOpacity>
+                        <Text style={styles.listeyeEkleTxt}> Listeye Ekle</Text>
+                    </View>
+                    
+                    <FlatList
+                        data = {this.state.listeler}
+                        keyExtractor= {item => item.id.toString()}
+                        renderItem={({item}) => (<Is list={item} />)}
+                        keyboardShouldPersistTaps="always"
+                        horizontal={false}
+                        showsHorizontalScrollIndicator={true}
+                        style={{height:windowWidth*1.35}}
+                        />
                 </View>
-                <View style={{marginVertical: 20}}>
-                    <TouchableOpacity style={styles.listeyeEkle}>
-                        <AntDesign name="plus" size={16} color={Colors.white}/>
-                    </TouchableOpacity>
-                    <Text style={styles.listeyeEkleTxt}> Listeye Ekle</Text>
-                </View>
-                <ScrollView>
-                <FlatList
-                    data = {this.state.listeler}
-                    keyExtractor= {item => item.id.toString()}
-                    renderItem={({item}) => (<Is list={item} />)}
-                    keyboardShouldPersistTaps="always"
-                    horizontal={false}
-                    showsHorizontalScrollIndicator={true}
-                    />
-                </ScrollView>
             </SafeAreaView>
         );
     }
@@ -99,8 +95,6 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: Colors.themeOrange,
-      alignItems: 'center',
-      justifyContent: 'center'
     },
     divider:{
         height:1,
