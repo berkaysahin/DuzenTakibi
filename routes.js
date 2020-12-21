@@ -28,7 +28,11 @@ const DrawerMenusu = (props) => (
           <Image source={require('./assets/logo.png')} style={{ width: 120, height: 120, borderRadius:40 }} />
         </View>
         <View style={{alignItems:'center'}}>
-          <Text>{firebase.auth().currentUser.email}</Text>
+          <Text>
+            {
+              firebase.auth() ? firebase.auth().currentUser.email : ''
+            }
+            </Text>
           <View style={{ margin: 10 }}>
           <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                     <TouchableOpacity

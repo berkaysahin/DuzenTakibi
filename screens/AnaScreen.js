@@ -1,11 +1,12 @@
 import React, { useState, useEffect, Component } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, useWindowDimensions, ScrollView, Dimensions, LayoutAnimation, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, Modal, useWindowDimensions, ScrollView, Dimensions, LayoutAnimation, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import firebase from 'firebase'
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../utils/Colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import FirebaseKmt from '../FirebaseKmt';
 import Is from '../components/Is';
+import EkleModal from '../components/EkleModal';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
@@ -17,27 +18,31 @@ export default class HomeScreen extends React.Component {
         user: {},
         listeler: [],
         loading: true,
+        addTodoVisible: false,
     };
 
-
     componentDidMount(){
-        console.ignoredYellowBox = ['Setting a timer'];
-        const { email, displayName, uid } = firebase.auth().currentUser;
-        this.setState({ email, displayName, uid });
-        
+        console.disableYellowBox = true
         fb = new FirebaseKmt((error, user) => {
-            if (error) {
-                return alert("Hata!");
+            if (error == "error") {
+                return;
             }
-            
-            fb.listeyiGetir(listeler => {
-                this.setState({ listeler, user }, () => {
-                    this.setState({ loading: false });
+            if (user) {
+                const { email, displayName, uid } = firebase.auth().currentUser;
+                this.setState({ email, displayName, uid });
+                fb.listeyiGetir(listeler => {
+                    this.setState({ listeler, user }, () => {
+                        this.setState({ loading: false });
+                    });
                 });
-            });
-
-            this.setState({ user });
+    
+                this.setState({ user });
+            }
         });
+    }
+
+    componentWillUnmount() {
+        fb.detach();
     }
 
     signOut = () => {
@@ -45,8 +50,20 @@ export default class HomeScreen extends React.Component {
     };
 
     listeyiYenile = list => {
-        firebase.listeyiYenile(list);
+        fb.listeyiYenile(list);
     };
+
+    addList = list => {
+        fb.addList({
+            name: list.name,
+            color: list.color,
+            todos: []
+        });
+    };
+
+    toggleAddTodoModal() {
+        this.setState({ addTodoVisible: !this.state.addTodoVisible });
+    }
 
     render() {
         if(this.state.loading){
@@ -62,6 +79,14 @@ export default class HomeScreen extends React.Component {
             <SafeAreaView style={styles.container}>
                 <View style={{margin:10}}></View>
 
+                <Modal
+                    animationType="slide"
+                    visible={this.state.addTodoVisible}
+                    onRequestClose={() => this.toggleAddTodoModal()}
+                >
+                    <EkleModal closeModal={() => this.toggleAddTodoModal()} addList={this.addList} />
+                </Modal>
+
                 <MaterialIcons name="menu" size={32} color={Colors.white} style={{left: 20, top:20}} onPress={() => this.props.navigation.openDrawer()} />
 
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -70,7 +95,7 @@ export default class HomeScreen extends React.Component {
                         <View style={styles.divider} />
                     </View>
                     <View style={{marginVertical: 20}}>
-                        <TouchableOpacity style={styles.listeyeEkle}>
+                        <TouchableOpacity style={styles.listeyeEkle} onPress={() => this.toggleAddTodoModal()}>
                             <AntDesign name="plus" size={16} color={Colors.white}/>
                         </TouchableOpacity>
                         <Text style={styles.listeyeEkleTxt}> Listeye Ekle</Text>

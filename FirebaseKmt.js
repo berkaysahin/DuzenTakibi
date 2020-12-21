@@ -10,7 +10,7 @@ class FirebaseKmt{
             if (user) {
                 param(null, user);
             } else {
-                param(error);
+                param("error");
             }
         });
     }
@@ -29,6 +29,10 @@ class FirebaseKmt{
     listeyiYenile(liste) {
         let db = this.db;
         db.doc(liste.id).update(liste);
+    }
+
+    detach() {
+        this.unsubscribe;
     }
 }
 
