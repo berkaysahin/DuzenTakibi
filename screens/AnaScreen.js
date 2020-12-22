@@ -49,8 +49,12 @@ export default class HomeScreen extends React.Component {
         firebase.auth().signOut();
     };
 
-    listeyiYenile = list => {
-        fb.listeyiYenile(list);
+    renderList = list => {
+        return <Is list={list} updateList={this.updateList} />;
+    };
+
+    updateList = list => {
+        fb.updateList(list);
     };
 
     addList = list => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Modal, useWindowDimensions, Dimensions } from "react-native";
 import Colors from '../utils/Colors';
+import YapilacaklarModal from './YapilacaklarModal'
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -14,14 +15,29 @@ export default class Is extends React.Component {
     }
 
     render() {
-        const liste = this.props.list;
-        const tamamlanmisSayisi = liste.todos.filter(todo => todo.completed).length;
-        const beklenenSayisi = liste.todos.length - tamamlanmisSayisi;
+        const list = this.props.list;
+        const tamamlanmisSayisi = list.todos.filter(todo => todo.completed).length;
+        const beklenenSayisi = list.todos.length - tamamlanmisSayisi;
 
         return (
-            <View style={[styles.listContainer, { backgroundColor: liste.color }]}>
+            <View>
+                <Modal
+                    animationType="slide"
+                    visible={this.state.showListVisible}
+                    onRequestClose={() => this.toggleListModal()}
+                >
+                    <YapilacaklarModal
+                        list={list}
+                        closeModal={() => this.toggleListModal()}
+                        updateList={this.props.updateList}
+                    />
+                </Modal>
+                <TouchableOpacity
+                    style={[styles.listContainer, { backgroundColor: list.color }]}
+                    onPress={() => this.toggleListModal()}
+                >
                     <Text style={styles.listTitle} numberOfLines={1}>
-                        {liste.name}
+                        {list.name}
                     </Text>
 
                     <View>
@@ -34,6 +50,7 @@ export default class Is extends React.Component {
                             <Text style={styles.subtitle}>Bitti</Text>
                         </View>
                     </View>
+                    </TouchableOpacity>
             </View>
         );
     }

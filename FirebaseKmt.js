@@ -26,7 +26,7 @@ class FirebaseKmt{
         });
     }
 
-    listeyiYenile(liste) {
+    updateList(liste) {
         let db = this.db;
         db.doc(liste.id).update(liste);
     }
