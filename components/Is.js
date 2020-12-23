@@ -36,19 +36,12 @@ export default class Is extends React.Component {
                     style={[styles.listContainer, { backgroundColor: list.color }]}
                     onPress={() => this.toggleListModal()}
                 >
-                    <Text style={styles.listTitle} numberOfLines={1}>
-                        {list.name}
-                    </Text>
-
-                    <View>
-                        <View style={{ alignItems: "center", justifyContent:'center', flexDirection:'row' }}>
-                            <Text style={styles.count}>{beklenenSayisi}</Text>
-                            <Text style={styles.subtitle}>Yapılacak</Text>
-                        </View>
-                        <View style={{ alignItems: "center", justifyContent:'center', flexDirection:'row' }}>
-                            <Text style={styles.count}>{tamamlanmisSayisi}</Text>
-                            <Text style={styles.subtitle}>Bitti</Text>
-                        </View>
+                     <View style={{ alignItems: "center", justifyContent:'space-between', flexDirection:'row' }}>
+                        <Text style={styles.listTitle} numberOfLines={1}>{list.name}</Text>
+                        <Text style={styles.count}> | {beklenenSayisi}</Text>
+                        <Text style={styles.subtitle}> Yapılacak</Text>
+                        <Text style={styles.count}> | {tamamlanmisSayisi}</Text>
+                        <Text style={styles.subtitle}> Bitti</Text>
                     </View>
                     </TouchableOpacity>
             </View>
@@ -60,26 +53,23 @@ const styles = StyleSheet.create({
     listContainer: {
         paddingVertical: 32,
         paddingHorizontal: 16,
-        borderRadius: 6,
-        marginHorizontal: 12,
         alignItems: "center",
-        width: windowWidth * 0.8,
-        marginBottom:15,
+        width: windowWidth,
     },
     listTitle: {
         fontSize: 24,
         fontWeight: "700",
         color: Colors.white,
-        marginBottom: 18
+        //marginBottom: 18
     },
     count: {
-        fontSize: 48,
+        fontSize: 24,
         fontWeight: "200",
         color: Colors.white
     },
     subtitle: {
         fontSize: 12,
         fontWeight: "700",
-        color: Colors.white
+        color: Colors.white,
     }
 });

@@ -27,8 +27,13 @@ class FirebaseKmt{
     }
 
     updateList(liste) {
-        let db = this.db;
+        let db = firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler");
         db.doc(liste.id).update(liste);
+    }
+
+    addList(liste) {
+        let db = firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler");
+        db.add(liste);
     }
 
     detach() {

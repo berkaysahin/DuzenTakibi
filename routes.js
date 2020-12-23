@@ -12,6 +12,7 @@ import KayitScreen from './screens/KayitScreen';
 import YukleyiciScreen from './screens/YukleyiciScreen';
 import AnaScreen from './screens/AnaScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import EkleModal from './components/EkleModal';
 import Colors from './utils/Colors.js';
 
 import {DrawerItems} from 'react-navigation-drawer'
@@ -28,20 +29,16 @@ const DrawerMenusu = (props) => (
           <Image source={require('./assets/logo.png')} style={{ width: 120, height: 120, borderRadius:40 }} />
         </View>
         <View style={{alignItems:'center'}}>
+        <View style={{ margin: 10 }}>
+          <Text style={{fontSize:32}}>Düzen Takibi</Text>
+          </View>
           <Text>
             {
               firebase.auth() ? firebase.auth().currentUser.email : ''
             }
             </Text>
           <View style={{ margin: 10 }}>
-          <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.props.navigation.navigate('Profile')}
-                    >
-                        <Text style={{ fontSize: 20 }}>Giriş Yap</Text>
-                    </TouchableOpacity>
-                </View>
+          <Text>{firebase.auth().currentUser.displayName}</Text>
           </View>
           <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                     <TouchableOpacity
@@ -80,6 +77,19 @@ const AppTabNavigator = createBottomTabNavigator(
       screen: AnaScreen,
       navigationOptions:{
         tabBarIcon: getTabBarIcon('list'),
+      }
+    },
+    TodoEkle:{
+      screen: EkleModal,
+      navigationOptions:{
+        tabBarIcon: ({tintColor}) => (
+          <MaterialIcons
+              name="add-circle"
+              color={tintColor}
+              size={72}
+              style={{marginBottom:45}}
+          />
+      )
       }
     },
     Profile:{
