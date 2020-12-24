@@ -25,13 +25,12 @@ export default class ProfileScreen extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={{margin:10}}></View>
-
                 <MaterialIcons name="menu" size={32} color={Colors.white} style={{left: 20, top:20}} onPress={() => this.props.navigation.openDrawer()} />
 
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            </View>
+                    
+                </View>
             </SafeAreaView>
-            
         );
     }
 }

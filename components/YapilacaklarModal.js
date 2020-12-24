@@ -50,6 +50,12 @@ export default class YapilacaklarModal extends React.Component {
 
     };
 
+    deleteList = () => {
+        let list = this.props.list;
+        firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler").doc(list.id).delete();
+
+    };
+
     renderTodo = (todo, index) => {
         return (
             <View style={styles.todoContainer}>
@@ -95,10 +101,16 @@ export default class YapilacaklarModal extends React.Component {
             <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
                 <SafeAreaView style={styles.container}>
                     <TouchableOpacity
-                        style={{ position: "absolute", top: 64, right: 32, zIndex: 10 }}
+                        style={{ position: "absolute", top: 25, right: 32, zIndex: 10 }}
                         onPress={this.props.closeModal}
                     >
                         <AntDesign name="close" size={24} color={Colors.black} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{ position: "absolute", top: 64, right: 32, zIndex: 10 }}
+                        onPress={() => this.deleteList()}
+                    >
+                        <AntDesign name="delete" size={24} color={Colors.themeRed} />
                     </TouchableOpacity>
 
                     <View style={[styles.section, styles.header, { borderBottomColor: list.color }]}>

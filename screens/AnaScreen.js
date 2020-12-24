@@ -10,6 +10,7 @@ import EkleModal from '../components/EkleModal';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default class HomeScreen extends React.Component {
     state = {
@@ -82,15 +83,6 @@ export default class HomeScreen extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={{margin:10}}></View>
-
-                <Modal
-                    animationType="slide"
-                    visible={this.state.addTodoVisible}
-                    onRequestClose={() => this.toggleAddTodoModal()}
-                >
-                    <EkleModal closeModal={() => this.toggleAddTodoModal()} addList={this.addList} />
-                </Modal>
-
                 <MaterialIcons name="menu" size={32} color={Colors.white} style={{left: 20, top:20}} onPress={() => this.props.navigation.openDrawer()} />
 
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -98,12 +90,7 @@ export default class HomeScreen extends React.Component {
                     <View style={{flexDirection: "row"}}>
                         <View style={styles.divider} />
                     </View>
-                    <View style={{marginVertical: 20}}>
-                        <TouchableOpacity style={styles.listeyeEkle} onPress={() => this.toggleAddTodoModal()}>
-                            <AntDesign name="plus" size={16} color={Colors.white}/>
-                        </TouchableOpacity>
-                        <Text style={styles.listeyeEkleTxt}> Listeye Ekle</Text>
-                    </View>
+                    <View style={{marginVertical: 2}}></View>
                     
                     <FlatList
                         data = {this.state.listeler}
@@ -112,7 +99,7 @@ export default class HomeScreen extends React.Component {
                         keyboardShouldPersistTaps="always"
                         horizontal={false}
                         showsHorizontalScrollIndicator={true}
-                        style={{height:windowWidth*1.35}}
+                        style={{height:windowHeight*0.84}}
                         />
                 </View>
             </SafeAreaView>
