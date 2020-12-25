@@ -8,7 +8,7 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-export default class EkleModal extends React.Component {
+export default class TodoEkleScreen extends React.Component {
     backgroundColors = [Colors.black, Colors.blue, Colors.greyLight, Colors.themeRed, Colors.themeBrown, Colors.themeYellow, Colors.themeOrangeDark];
 
     state = {
@@ -16,7 +16,7 @@ export default class EkleModal extends React.Component {
         color: this.backgroundColors[0],
         showListVisible: false,
         
-        time: new Date(),
+        datetime: new Date(),
         title:"Bildirim başlığı",
         body:"Bildirim içeriği",
 
@@ -25,8 +25,8 @@ export default class EkleModal extends React.Component {
 
     handlePicker = (data) => {
         //data.setHours(data.getHours() + 3);
-        this.setState({time:data});
-        console.log(this.state.time);
+        this.setState({datetime:data});
+        console.log(this.state.datetime);
         this.setState({
             dtVisible:false,
         });
@@ -45,12 +45,17 @@ export default class EkleModal extends React.Component {
     }
 
     scheduleNotification = async () => {
-        console.log("Log: " + 
-        this.state.time.getFullYear() + " " + 
-        (this.state.time.getMonth() + 1) + " " +
-        this.state.time.getDate() + " " + 
-        this.state.time.getHours() + " " + 
-        this.state.time.getMinutes());
+        //this.state.datetime.setHours(this.state.datetime.getHours() + 3);
+        // console.log("Log: " + 
+        // this.state.datetime.getFullYear() + "-" + 
+        //                 (this.state.datetime.getMonth() + 1) + "-" +
+        //                 this.state.datetime.getDate() + " " + 
+        //                 this.state.datetime.getHours() + ":" + 
+        //                 this.state.datetime.getMinutes());
+
+        
+
+        this.setState({ showListVisible: !this.state.showListVisible });
 
         Notifications.scheduleNotificationAsync({
             content:{
@@ -58,37 +63,20 @@ export default class EkleModal extends React.Component {
                 body:'İçerik',
             },
             trigger:{
-                //date: this.state.time,
-                year: this.state.time.getFullYear(),
-                month: this.state.time.getMonth() + 1,
-                date: this.state.time.getDate(),
-                hour: this.state.time.getHours(),
-                minute: this.state.time.getMinutes(),
-                seconds: 0,
+                date: this.state.datetime,
             },
           });
       };
 
-
-    onSubmit = text => {
-        Keyboard.dismiss();
-        const schedulingOptions = {
-        time: new Date().getTime() + Number(text),
-        };
-        Notifications.scheduleLocalNotificationAsync(
-            {
-                title: this.state.title,
-                body: this.state.body
-            },
-            schedulingOptions,
-        );
-    };
-
-    
-
     addList = list => {
         this.addListFire({
             name: list.name,
+            datetime: this.state.datetime.getFullYear() + "-" + 
+                        (this.state.datetime.getMonth() + 1) + "-" +
+                        this.state.datetime.getDate() + " " + 
+                        this.state.datetime.getHours() + ":" + 
+                        this.state.datetime.getMinutes(),
+
             color: list.color,
             todos: []
         });
@@ -104,13 +92,17 @@ export default class EkleModal extends React.Component {
     }
 
     createTodo = () => {
-        const { name, color } = this.state;
+        
 
-        const list = { name, color };
+        const { name, datetime, color } = this.state;
+
+        const list = { name, datetime, color };
 
         this.addList(list);
+        this.scheduleNotification();
 
         this.setState({ name: "" });
+
         this.props.navigation.navigate("Ana");
     };
 
@@ -138,10 +130,30 @@ export default class EkleModal extends React.Component {
                         onChangeText={text => this.setState({ name: text })}
                     />
 
+                    <View style={{flexDirection: "row", margin:20 }}>
+                        <View style={styles.divider} />
+                    </View>
+
+                    <TouchableOpacity
+                        style={[styles.dateTime, { backgroundColor: Colors.blue }]}
+                        onPress={this.showPicker}
+                    >
+                        <Text style={{ color: Colors.white, fontWeight: "600" }}>Bitiş Zamanını Ayarla</Text>
+                    </TouchableOpacity>
+
+                    <View style={{flexDirection: "row", margin:20 }}>
+                        <View style={styles.divider} />
+                    </View>
+
+                    <Text>Görev Rengini Seç:</Text>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 12 }}>
                         {this.renderColors()}
                     </View>
 
+                    <View style={{flexDirection: "row", margin: 20 }}>
+                        <View style={styles.divider} />
+                    </View>
+                    
                     <TouchableOpacity
                         style={[styles.create, { backgroundColor: this.state.color }]}
                         onPress={this.createTodo}
@@ -149,25 +161,11 @@ export default class EkleModal extends React.Component {
                         <Text style={{ color: Colors.white, fontWeight: "600" }}>Oluştur!</Text>
                     </TouchableOpacity>
 
-                    {/* <TextInput
-                        style={styles.input}
-                        placeholder="Süre"
-                        onChangeText={text => this.setState({ time: text })}
-                    /> */}
-                    <View style={{margin:10}}></View>
-
-                <Button onPress={this.scheduleNotification} title="Bildirim" />
-
-                <View style={{margin:10}}></View>
-
-                <Button title="Show Date Picker" onPress={ this.showPicker } />
-
-                <View style={{margin:10}}></View>
-
                 <DateTimePickerModal
                     isVisible={this.state.dtVisible}
                     mode="datetime"
                     locale="tr_TR"
+                    minimumDate={Date.now}
                     onConfirm={this.handlePicker}
                     onCancel={this.hidePicker}
                 />
@@ -201,7 +199,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     create: {
-        marginTop: 24,
+        height: 50,
+        borderRadius: 6,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    dateTime: {
         height: 50,
         borderRadius: 6,
         alignItems: "center",
@@ -211,5 +214,11 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderRadius: 4
-    }
+    },
+    divider:{
+        height:1,
+        flex:1,
+        alignSelf:"center",
+        backgroundColor: Colors.greyDark,
+    },
 });

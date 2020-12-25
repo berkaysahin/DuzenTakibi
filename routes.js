@@ -12,7 +12,7 @@ import KayitScreen from './screens/KayitScreen';
 import YukleyiciScreen from './screens/YukleyiciScreen';
 import AnaScreen from './screens/AnaScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import EkleModal from './components/EkleModal';
+import TodoEkleScreen from './screens/TodoEkleScreen';
 import Colors from './utils/Colors.js';
 
 import {DrawerItems} from 'react-navigation-drawer'
@@ -80,7 +80,7 @@ const AppTabNavigator = createBottomTabNavigator(
       }
     },
     TodoEkle:{
-      screen: EkleModal,
+      screen: TodoEkleScreen,
       navigationOptions:{
         tabBarIcon: ({tintColor}) => (
           <MaterialIcons

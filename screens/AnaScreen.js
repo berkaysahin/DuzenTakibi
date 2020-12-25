@@ -6,7 +6,6 @@ import Colors from '../utils/Colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import FirebaseKmt from '../FirebaseKmt';
 import Is from '../components/Is';
-import EkleModal from '../components/EkleModal';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
