@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity, Modal, useWindowDimensions, ScrollView, Dimensions, LayoutAnimation, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, LogBox, Button, TouchableOpacity, Modal, useWindowDimensions, ScrollView, Dimensions, LayoutAnimation, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import firebase from 'firebase'
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../utils/Colors';
@@ -22,7 +22,9 @@ export default class HomeScreen extends React.Component {
     };
 
     componentDidMount(){
-        console.disableYellowBox = true
+        //console.disableYellowBox = true
+        LogBox.ignoreAllLogs();
+        
         fb = new FirebaseKmt((error, user) => {
             if (error == "error") {
                 return;
@@ -82,14 +84,14 @@ export default class HomeScreen extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={{margin:10}}></View>
-                <MaterialIcons name="menu" size={32} color={Colors.white} style={{left: 20, top:20}} onPress={() => this.props.navigation.openDrawer()} />
+
+                <View style={{ flexDirection:'row', alignItems:'center', top:20, justifyContent:'center' }}>
+                    <MaterialIcons name="menu" size={32} color={Colors.white} style={{ left: 20, position:'absolute' }} onPress={() => this.props.navigation.openDrawer()} />
+                    <Text style={styles.Baslik}>Düzen Takibi</Text>
+                </View>
 
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.Baslik}>Düzen Takibi</Text>
-                    <View style={{flexDirection: "row"}}>
-                        <View style={styles.divider} />
-                    </View>
-                    <View style={{marginVertical: 2}}></View>
+                    <View style={{margin: 20}}></View>
                     
                     <FlatList
                         data = {this.state.listeler}
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
         height:1,
         flex:1,
         alignSelf:"center",
-        backgroundColor: Colors.greyDark,
+        backgroundColor: Colors.black,
     },
     Baslik:{
         fontWeight:"300",

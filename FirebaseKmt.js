@@ -15,7 +15,7 @@ class FirebaseKmt{
         });
     }
 
-    listeyiGetir(param) {
+    listeyiGetir = async (param) => {
         let db = firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler");
         this.unsubscribe = db.onSnapshot(snapshot => {
             lists = [];

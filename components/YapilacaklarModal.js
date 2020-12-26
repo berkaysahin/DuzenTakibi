@@ -107,7 +107,7 @@ export default class YapilacaklarModal extends React.Component {
                         <AntDesign name="close" size={24} color={Colors.black} />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={{ position: "absolute", top: 64, right: 32, zIndex: 10 }}
+                        style={{ position: "absolute", top: 91, right: 32, zIndex: 10 }}
                         onPress={() => this.deleteList()}
                     >
                         <AntDesign name="delete" size={24} color={Colors.themeRed} />
@@ -120,6 +120,7 @@ export default class YapilacaklarModal extends React.Component {
                                 {taskCount} görevden {completedCount} tanesi yapıldı.
                             </Text>
                         </View>
+                        <Text style={{ marginBottom: 10 }}>Bitiş Tarihi: { list.datetime }</Text>
                     </View>
 
                     <View style={[styles.section, { flex: 3, marginVertical: 16 }]}>

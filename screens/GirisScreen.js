@@ -20,6 +20,10 @@ export default class LoginScreen extends React.Component {
                         .catch(error => this.setState({errorMessage: error.message}));
     }
 
+    componentWillUnmount(){
+        this.unsubscribe;
+    }
+
     render() {
         return (
             <View style={styles.container}>

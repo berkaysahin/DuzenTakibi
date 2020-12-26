@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, TextInput, Modal, Button, Input, Keyboard } from "react-native";
+import { View, Text, StyleSheet, KeyboardAvoidingView, Alert, TouchableOpacity, TextInput, Modal, Button, Input, Keyboard } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../utils/Colors";
 import firebase from 'firebase'
@@ -7,9 +7,10 @@ import * as Notifications from 'expo-notifications'
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default class TodoEkleScreen extends React.Component {
-    backgroundColors = [Colors.black, Colors.blue, Colors.greyLight, Colors.themeRed, Colors.themeBrown, Colors.themeYellow, Colors.themeOrangeDark];
+    backgroundColors = [Colors.black, Colors.blue, Colors.greyDark, Colors.themeRed, Colors.themeBrown, Colors.themeYellow, Colors.themeOrangeDark];
 
     state = {
         name: "",
@@ -26,7 +27,7 @@ export default class TodoEkleScreen extends React.Component {
     handlePicker = (data) => {
         //data.setHours(data.getHours() + 3);
         this.setState({datetime:data});
-        console.log(this.state.datetime);
+        //console.log(this.state.datetime);
         this.setState({
             dtVisible:false,
         });
@@ -44,7 +45,7 @@ export default class TodoEkleScreen extends React.Component {
         });
     }
 
-    scheduleNotification = async () => {
+    scheduleNotification = async (list) => {
         //this.state.datetime.setHours(this.state.datetime.getHours() + 3);
         // console.log("Log: " + 
         // this.state.datetime.getFullYear() + "-" + 
@@ -53,14 +54,12 @@ export default class TodoEkleScreen extends React.Component {
         //                 this.state.datetime.getHours() + ":" + 
         //                 this.state.datetime.getMinutes());
 
-        
-
         this.setState({ showListVisible: !this.state.showListVisible });
 
         Notifications.scheduleNotificationAsync({
             content:{
-                title:'Başlık',
-                body:'İçerik',
+                title:list.name,
+                body:"İşin bitme zamanı geldi!",
             },
             trigger:{
                 date: this.state.datetime,
@@ -92,18 +91,18 @@ export default class TodoEkleScreen extends React.Component {
     }
 
     createTodo = () => {
-        
-
         const { name, datetime, color } = this.state;
 
         const list = { name, datetime, color };
 
-        this.addList(list);
-        this.scheduleNotification();
-
-        this.setState({ name: "" });
-
-        this.props.navigation.navigate("Ana");
+        if(list.name == ''){
+            Alert.alert("Listenin adı boş olamaz.");
+        }else{
+            this.addList(list);
+            this.scheduleNotification(list);
+            this.setState({ name: "" });
+            this.props.navigation.navigate("Ana");
+        }
     };
 
     renderColors() {
@@ -122,7 +121,7 @@ export default class TodoEkleScreen extends React.Component {
         return (
             <KeyboardAvoidingView style={styles.container} behavior="padding">
                 <View style={{ alignSelf: "stretch", marginHorizontal: 32 }}>
-                    <Text style={styles.title}>Yeni Liste Oluştur</Text>
+                   <Text style={styles.title}>Yeni Liste Oluştur</Text>
 
                     <TextInput
                         style={styles.input}
@@ -165,7 +164,7 @@ export default class TodoEkleScreen extends React.Component {
                     isVisible={this.state.dtVisible}
                     mode="datetime"
                     locale="tr_TR"
-                    minimumDate={Date.now}
+                    minimumDate={new Date(Date.now())}
                     onConfirm={this.handlePicker}
                     onCancel={this.hidePicker}
                 />
@@ -220,5 +219,10 @@ const styles = StyleSheet.create({
         flex:1,
         alignSelf:"center",
         backgroundColor: Colors.greyDark,
+    },
+    Baslik:{
+        fontWeight:"300",
+        color: Colors.greyLight,
+        fontSize:38,
     },
 });
