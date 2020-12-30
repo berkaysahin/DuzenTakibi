@@ -12,6 +12,7 @@ export default class RegisterScreen extends React.Component {
         email: "",
         sifre: "",
         errorMessage: null,
+        adSoyad: "",
     }
 
     kayitIslemi = () => {
@@ -35,6 +36,14 @@ export default class RegisterScreen extends React.Component {
                     <Text style={{ fontSize: 32 }}>Haydi başlayalım!</Text>
                 </View>
                 <View style={{ padding: 20 }}>
+                    <TextInput
+                        placeholder="Ad Soyad"
+                        style={styles.input}
+                        onChangeText={adSoyad => this.setState({ adSoyad })}
+                        value={this.state.adSoyad}
+                    />
+                </View>
+                <View style={{ paddingBottom: 20 }}>
                     <TextInput
                         placeholder="E-Mail"
                         style={styles.input}

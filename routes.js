@@ -132,9 +132,6 @@ const AuthStack = createStackNavigator(
     },
     {
         headerMode: 'none',
-        // navigationOptions: {
-        //     tabBarIcon: getTabBarIcon('list'),
-        // },
     }
 )
 

@@ -27,7 +27,6 @@ export default class TodoEkleScreen extends React.Component {
     handlePicker = (data) => {
         //data.setHours(data.getHours() + 3);
         this.setState({datetime:data});
-        //console.log(this.state.datetime);
         this.setState({
             dtVisible:false,
         });
@@ -46,14 +45,6 @@ export default class TodoEkleScreen extends React.Component {
     }
 
     scheduleNotification = async (list) => {
-        //this.state.datetime.setHours(this.state.datetime.getHours() + 3);
-        // console.log("Log: " + 
-        // this.state.datetime.getFullYear() + "-" + 
-        //                 (this.state.datetime.getMonth() + 1) + "-" +
-        //                 this.state.datetime.getDate() + " " + 
-        //                 this.state.datetime.getHours() + ":" + 
-        //                 this.state.datetime.getMinutes());
-
         this.setState({ showListVisible: !this.state.showListVisible });
 
         Notifications.scheduleNotificationAsync({
@@ -144,7 +135,7 @@ export default class TodoEkleScreen extends React.Component {
                         <View style={styles.divider} />
                     </View>
 
-                    <Text>Görev Rengini Seç:</Text>
+                    <Text>Liste Rengini Seç:</Text>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 12 }}>
                         {this.renderColors()}
                     </View>

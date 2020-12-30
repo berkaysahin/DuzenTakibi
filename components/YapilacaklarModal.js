@@ -9,7 +9,8 @@ import {
     KeyboardAvoidingView,
     TextInput,
     Keyboard,
-    Animated
+    Animated,
+    Alert
 } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Colors from "../utils/Colors";
@@ -25,17 +26,18 @@ export default class YapilacaklarModal extends React.Component {
         list.todos[index].completed = !list.todos[index].completed;
 
         firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler").doc(list.id).update(list);
-        // this.props.updateList(list);
     };
 
     addTodo = () => {
         let list = this.props.list;
 
         if (!list.todos.some(todo => todo.title === this.state.newTodo)) {
-            list.todos.push({ title: this.state.newTodo, completed: false });
-
-            firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler").doc(list.id).update(list);
-
+            if(this.state.newTodo == ''){
+                Alert.alert("Görev adı boş olamaz.");
+            }else{
+                list.todos.push({ title: this.state.newTodo, completed: false });
+                firebase.firestore().collection("Users").doc(firebase.auth().currentUser.uid).collection("Listeler").doc(list.id).update(list);
+            }
         }
 
         this.setState({ newTodo: "" });
